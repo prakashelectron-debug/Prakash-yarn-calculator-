@@ -93,12 +93,6 @@
             font-size: 16px;
             font-weight: 500;
             outline: none;
-            transition: all 0.2s;
-        }
-
-        .input-group input:focus, .input-group select:focus {
-            border-color: #e94560;
-            background: #1a4a6f;
         }
 
         .button-group {
@@ -116,25 +110,14 @@
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .calculate-btn {
             background: #e94560;
         }
 
-        .calculate-btn:hover {
-            background: #ff6b6b;
-            transform: scale(0.98);
-        }
-
         .print-btn {
             background: #2c3e66;
-        }
-
-        .print-btn:hover {
-            background: #3a5a8c;
-            transform: scale(0.98);
         }
 
         .results {
@@ -170,7 +153,6 @@
         .result-unit {
             color: #e94560;
             font-size: 12px;
-            font-weight: 500;
             margin-left: 6px;
         }
 
@@ -198,30 +180,9 @@
             body {
                 background: white;
                 padding: 0;
-                margin: 0;
-            }
-            .container {
-                max-width: 100%;
-                padding: 10px;
-            }
-            .card {
-                background: white;
-                border: 1px solid #ccc;
-                box-shadow: none;
             }
             .calculate-btn, .print-btn, .button-group, .footer, .warning {
                 display: none;
-            }
-            .header {
-                background: #333;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .result-item {
-                border-bottom: 1px solid #ddd;
-            }
-            .result-value {
-                color: #333;
             }
         }
     </style>
@@ -283,7 +244,6 @@
     </div>
 
     <script>
-        // Update date and time every second
         function updateDateTime() {
             const now = new Date();
             const formatted = now.toLocaleString('en-IN', {
@@ -300,20 +260,18 @@
         updateDateTime();
         setInterval(updateDateTime, 1000);
 
-        // Fabric constants database
         const fabricData = {
-            sj: { name: "Single Jersey", neConstant: 4300, loopK: 12068, gaugeFactor: 1.0, gramPerM2Ratio: 1.0 },
-            rib1x1: { name: "1×1 Rib", neConstant: 6000, loopK: 16431, gaugeFactor: 0.85, gramPerM2Ratio: 1.35 },
-            rib2x1: { name: "2×1 Rib", neConstant: 5850, loopK: 19005, gaugeFactor: 0.82, gramPerM2Ratio: 1.45 },
-            rib2x2: { name: "2×2 Rib", neConstant: 5600, loopK: 17850, gaugeFactor: 0.80, gramPerM2Ratio: 1.40 },
-            interlock: { name: "Interlock", neConstant: 7200, loopK: 21000, gaugeFactor: 0.75, gramPerM2Ratio: 1.70 },
-            pique: { name: "Pique", neConstant: 5200, loopK: 13500, gaugeFactor: 0.90, gramPerM2Ratio: 1.20 },
-            singleLacoste: { name: "Single Lacoste", neConstant: 4450, loopK: 12500, gaugeFactor: 0.95, gramPerM2Ratio: 1.10 },
-            doubleLacoste: { name: "Double Lacoste", neConstant: 5100, loopK: 15000, gaugeFactor: 0.88, gramPerM2Ratio: 1.25 },
-            fleece: { name: "Fleece", neConstant: 7200, loopK: 18500, gaugeFactor: 0.78, gramPerM2Ratio: 1.50 }
+            sj: { name: "Single Jersey", neConstant: 4300, loopK: 12068, gramPerM2Ratio: 1.0 },
+            rib1x1: { name: "1×1 Rib", neConstant: 6000, loopK: 16431, gramPerM2Ratio: 1.35 },
+            rib2x1: { name: "2×1 Rib", neConstant: 5850, loopK: 19005, gramPerM2Ratio: 1.45 },
+            rib2x2: { name: "2×2 Rib", neConstant: 5600, loopK: 17850, gramPerM2Ratio: 1.40 },
+            interlock: { name: "Interlock", neConstant: 7200, loopK: 21000, gramPerM2Ratio: 1.70 },
+            pique: { name: "Pique", neConstant: 5200, loopK: 13500, gramPerM2Ratio: 1.20 },
+            singleLacoste: { name: "Single Lacoste", neConstant: 4450, loopK: 12500, gramPerM2Ratio: 1.10 },
+            doubleLacoste: { name: "Double Lacoste", neConstant: 5100, loopK: 15000, gramPerM2Ratio: 1.25 },
+            fleece: { name: "Fleece", neConstant: 7200, loopK: 18500, gramPerM2Ratio: 1.50 }
         };
 
-        // Machine gauge recommendation based on yarn count
         function getRecommendedGauge(yarnCount) {
             if (yarnCount <= 20) return "18 GG";
             if (yarnCount <= 24) return "20 GG";
@@ -324,7 +282,6 @@
             return "30 GG";
         }
 
-        // Needle size based on gauge
         function getNeedleSize(gauge) {
             const gaugeNum = parseInt(gauge);
             if (gaugeNum <= 18) return "3.5 mm (9 gauge)";
@@ -336,34 +293,30 @@
             return "1.8 mm (15 gauge)";
         }
 
-        // Calculate yarn consumption (kg) from GSM, width, length
         function calculateYarnConsumption(gsm, widthInches, meters, fabricFactor) {
             const widthMeters = widthInches * 0.0254;
             const areaSqM = widthMeters * meters;
             const fabricWeightGrams = gsm * areaSqM;
             let yarnKg = fabricWeightGrams / 1000;
             yarnKg = yarnKg * fabricFactor;
-            yarnKg = yarnKg * 1.05; // 5% wastage
+            yarnKg = yarnKg * 1.05;
             return yarnKg;
         }
 
-        // Store current calculation results for printing
         let currentResults = null;
 
         function calculate() {
-            // Get inputs
             const gsm = parseFloat(document.getElementById('gsm').value);
             const fabricKey = document.getElementById('fabricType').value;
             const widthInches = parseFloat(document.getElementById('width').value);
             const meters = parseFloat(document.getElementById('meters').value);
 
-            // Validate inputs
             if (isNaN(gsm) || gsm <= 0) {
-                alert("Please enter a valid GSM (e.g., 140-300)");
+                alert("Please enter a valid GSM");
                 return;
             }
             if (isNaN(widthInches) || widthInches <= 0) {
-                alert("Please enter a valid fabric width (inches)");
+                alert("Please enter a valid fabric width");
                 return;
             }
             if (isNaN(meters) || meters <= 0) {
@@ -372,266 +325,70 @@
             }
 
             const fabric = fabricData[fabricKey];
-            
-            // Calculate Yarn Count (Ne)
             const yarnCount = fabric.neConstant / gsm;
-            
-            // Calculate Loop Length (mm)
             const loopLength = fabric.loopK / (gsm * yarnCount);
-            
-            // Get Machine Gauge
             const machineGauge = getRecommendedGauge(yarnCount);
-            
-            // Get Needle Size
             const needleSize = getNeedleSize(machineGauge);
-            
-            // Calculate Required Yarn in KG
             const yarnKg = calculateYarnConsumption(gsm, widthInches, meters, fabric.gramPerM2Ratio);
-            
-            // Calculate Area
             const widthMeters = widthInches * 0.0254;
             const areaSqM = widthMeters * meters;
             
-            // Get current date and time for report
             const now = new Date();
-            const reportDateTime = now.toLocaleString('en-IN', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-            });
-            
-            // Format numbers
-            const yarnCountFormatted = yarnCount.toFixed(1);
-            const loopLengthFormatted = loopLength.toFixed(2);
-            const yarnKgFormatted = yarnKg.toFixed(0);
-            const areaSqMFormatted = areaSqM.toFixed(1);
-            const widthMetersFormatted = widthMeters.toFixed(3);
-            
-            // Store results for printing
+            const reportDateTime = now.toLocaleString('en-IN');
+
             currentResults = {
-                reportDateTime,
-                fabricName: fabric.name,
-                gsm: gsm,
-                widthInches: widthInches,
-                widthMeters: widthMetersFormatted,
-                meters: meters,
-                areaSqM: areaSqMFormatted,
-                yarnCount: yarnCountFormatted,
-                loopLength: loopLengthFormatted,
-                machineGauge: machineGauge,
-                needleSize: needleSize,
-                yarnKg: yarnKgFormatted,
-                fabricKey: fabricKey
+                reportDateTime, fabricName: fabric.name, gsm, widthInches, widthMeters: widthMeters.toFixed(3),
+                meters, areaSqM: areaSqM.toFixed(1), yarnCount: yarnCount.toFixed(1),
+                loopLength: loopLength.toFixed(2), machineGauge, needleSize, yarnKg: yarnKg.toFixed(0)
             };
-            
-            // Display results
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = `
-                <div class="result-item">
-                    <span class="result-label">📅 Report Date & Time</span>
-                    <span class="result-value">${reportDateTime}</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">🏭 App Name</span>
-                    <span class="result-value">Prakash Yarn Calculation</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">🧵 Fabric Type</span>
-                    <span class="result-value">${fabric.name}</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">🎯 Target GSM</span>
-                    <span class="result-value">${gsm}<span class="result-unit">g/m²</span></span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">🎯 Yarn Count (Ne)</span>
-                    <span class="result-value">${yarnCountFormatted}<span class="result-unit">/s</span></span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">🔄 Loop Length</span>
-                    <span class="result-value">${loopLengthFormatted}<span class="result-unit">mm</span></span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">⚙️ Machine Gauge</span>
-                    <span class="result-value">${machineGauge}</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">🪡 Needle Size</span>
-                    <span class="result-value">${needleSize}</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">📏 Fabric Width</span>
-                    <span class="result-value">${widthInches}<span class="result-unit">inches</span> / ${widthMetersFormatted}<span class="result-unit">m</span></span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">📦 Required Length</span>
-                    <span class="result-value">${meters}<span class="result-unit">meters</span></span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">📐 Fabric Area</span>
-                    <span class="result-value">${areaSqMFormatted}<span class="result-unit">m²</span></span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">🧶 Required Yarn</span>
-                    <span class="result-value">${yarnKgFormatted}<span class="result-unit">kg</span></span>
-                </div>
+
+            document.getElementById('results').innerHTML = `
+                <div class="result-item"><span class="result-label">📅 Report Date & Time</span><span class="result-value">${reportDateTime}</span></div>
+                <div class="result-item"><span class="result-label">🏭 App Name</span><span class="result-value">Prakash Yarn Calculation</span></div>
+                <div class="result-item"><span class="result-label">🧵 Fabric Type</span><span class="result-value">${fabric.name}</span></div>
+                <div class="result-item"><span class="result-label">🎯 Target GSM</span><span class="result-value">${gsm}<span class="result-unit">g/m²</span></span></div>
+                <div class="result-item"><span class="result-label">🎯 Yarn Count (Ne)</span><span class="result-value">${yarnCount.toFixed(1)}<span class="result-unit">/s</span></span></div>
+                <div class="result-item"><span class="result-label">🔄 Loop Length</span><span class="result-value">${loopLength.toFixed(2)}<span class="result-unit">mm</span></span></div>
+                <div class="result-item"><span class="result-label">⚙️ Machine Gauge</span><span class="result-value">${machineGauge}</span></div>
+                <div class="result-item"><span class="result-label">🪡 Needle Size</span><span class="result-value">${needleSize}</span></div>
+                <div class="result-item"><span class="result-label">📏 Fabric Width</span><span class="result-value">${widthInches}<span class="result-unit">inches</span> / ${widthMeters.toFixed(3)}<span class="result-unit">m</span></span></div>
+                <div class="result-item"><span class="result-label">📦 Required Length</span><span class="result-value">${meters}<span class="result-unit">meters</span></span></div>
+                <div class="result-item"><span class="result-label">📐 Fabric Area</span><span class="result-value">${areaSqM.toFixed(1)}<span class="result-unit">m²</span></span></div>
+                <div class="result-item"><span class="result-label">🧶 Required Yarn</span><span class="result-value">${yarnKg.toFixed(0)}<span class="result-unit">kg</span></span></div>
             `;
-            
-            // Add warning
-            const warningDiv = document.createElement('div');
-            warningDiv.className = 'warning';
-            if (yarnCount < 18) {
-                warningDiv.innerHTML = `<p>⚠️ Warning: Yarn count ${yarnCountFormatted}/s is quite coarse. Ensure your machine can handle thick yarns. Consider 16-18 GG machine.</p>`;
-            } else if (yarnCount > 40) {
-                warningDiv.innerHTML = `<p>⚠️ Warning: Yarn count ${yarnCountFormatted}/s is very fine. Requires high-gauge machine (28-32 GG).</p>`;
-            } else {
-                warningDiv.innerHTML = `<p>✅ Valid combination. Yarn count is within standard range for ${fabric.name}.</p>`;
-            }
-            
-            const existingWarning = document.querySelector('#resultsCard .warning');
-            if (existingWarning) existingWarning.remove();
-            document.getElementById('resultsCard').appendChild(warningDiv);
         }
 
         function printReport() {
             if (!currentResults) {
-                alert("Please click 'Calculate' first to generate results.");
+                alert("Please click 'Calculate' first");
                 return;
             }
-            
-            // Create print-friendly HTML
             const printWindow = window.open('', '_blank');
-            const now = new Date();
-            
             printWindow.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Prakash Yarn Calculation - Report</title>
-                    <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                            padding: 30px;
-                            margin: 0;
-                        }
-                        .report-header {
-                            text-align: center;
-                            border-bottom: 2px solid #333;
-                            padding-bottom: 15px;
-                            margin-bottom: 20px;
-                        }
-                        .report-header h1 {
-                            color: #e94560;
-                            margin: 0;
-                            font-size: 28px;
-                        }
-                        .report-header p {
-                            color: #666;
-                            margin: 5px 0;
-                        }
-                        .report-title {
-                            text-align: center;
-                            font-size: 18px;
-                            font-weight: bold;
-                            margin: 20px 0;
-                            background: #f0f0f0;
-                            padding: 10px;
-                        }
-                        .details-table {
-                            width: 100%;
-                            border-collapse: collapse;
-                            margin-top: 20px;
-                        }
-                        .details-table tr {
-                            border-bottom: 1px solid #ddd;
-                        }
-                        .details-table td {
-                            padding: 12px 8px;
-                        }
-                        .details-table td:first-child {
-                            font-weight: bold;
-                            width: 50%;
-                            background: #f9f9f9;
-                        }
-                        .footer {
-                            text-align: center;
-                            margin-top: 40px;
-                            padding-top: 20px;
-                            border-top: 1px solid #ddd;
-                            font-size: 12px;
-                            color: #999;
-                        }
-                        .warning-print {
-                            background: #fff3cd;
-                            border: 1px solid #ffc107;
-                            padding: 10px;
-                            margin-top: 20px;
-                            border-radius: 5px;
-                        }
-                        @media print {
-                            body {
-                                padding: 20px;
-                            }
-                            .no-print {
-                                display: none;
-                            }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="report-header">
-                        <h1>🧶 Prakash Yarn Calculation</h1>
-                        <p>Professional Knitting Calculator</p>
-                        <p>Report Generated: ${now.toLocaleString('en-IN')}</p>
-                    </div>
-                    
-                    <div class="report-title">
-                        KNITTING PRODUCTION REPORT
-                    </div>
-                    
-                    <table class="details-table">
-                        <tr><td>📅 Report Date & Time</td><td>${currentResults.reportDateTime}</td></tr>
-                        <tr><td>🏭 Application Name</td><td>Prakash Yarn Calculation</td></tr>
-                        <tr><td>🧵 Fabric Type</td><td>${currentResults.fabricName}</td></tr>
-                        <tr><td>🎯 Target GSM</td><td>${currentResults.gsm} g/m²</td></tr>
-                        <tr><td>🎯 Recommended Yarn Count (Ne)</td><td>${currentResults.yarnCount}/s</td></tr>
-                        <tr><td>🔄 Loop Length</td><td>${currentResults.loopLength} mm</td></tr>
-                        <tr><td>⚙️ Knitting Machine Gauge</td><td>${currentResults.machineGauge}</td></tr>
-                        <tr><td>🪡 Needle Size</td><td>${currentResults.needleSize}</td></tr>
-                        <tr><td>📏 Fabric Width</td><td>${currentResults.widthInches} inches / ${currentResults.widthMeters} meters</td></tr>
-                        <tr><td>📦 Required Fabric Length</td><td>${currentResults.meters} meters</td></tr>
-                        <tr><td>📐 Total Fabric Area</td><td>${currentResults.areaSqM} m²</td></tr>
-                        <tr><td>🧶 Required Yarn Quantity</td><td>${currentResults.yarnKg} kg</td></tr>
-                    </table>
-                    
-                    <div class="warning-print">
-                        <strong>⚠️ Note:</strong> 5% wastage included in yarn calculation. Actual consumption may vary based on machine condition and yarn quality.
-                    </div>
-                    
-                    <div class="footer">
-                        Prakash Yarn Calculation v1.0 | Generated on ${now.toLocaleString()}<br>
-                        This is a computer-generated document. No signature required.
-                    </div>
-                    
-                    <div class="no-print" style="text-align: center; margin-top: 30px;">
-                        <button onclick="window.print()" style="padding: 10px 20px; background: #e94560; color: white; border: none; border-radius: 8px; cursor: pointer;">🖨️ Print This Report</button>
-                        <button onclick="window.close()" style="padding: 10px 20px; background: #666; color: white; border: none; border-radius: 8px; cursor: pointer; margin-left: 10px;">❌ Close</button>
-                    </div>
-                </body>
-                </html>
+                <html><head><title>Prakash Yarn Calculation - Report</title>
+                <style>body{font-family:Arial;padding:30px} .report-header{text-align:center} .details-table td{padding:10px}</style>
+                </head><body>
+                <div class="report-header"><h1>🧶 Prakash Yarn Calculation</h1><p>Report: ${currentResults.reportDateTime}</p></div>
+                <table class="details-table">
+                    <tr><td><strong>Fabric Type</strong></td><td>${currentResults.fabricName}</td></tr>
+                    <tr><td><strong>Target GSM</strong></td><td>${currentResults.gsm} g/m²</td></tr>
+                    <tr><td><strong>Yarn Count (Ne)</strong></td><td>${currentResults.yarnCount}/s</td></tr>
+                    <tr><td><strong>Loop Length</strong></td><td>${currentResults.loopLength} mm</td></tr>
+                    <tr><td><strong>Machine Gauge</strong></td><td>${currentResults.machineGauge}</td></tr>
+                    <tr><td><strong>Needle Size</strong></td><td>${currentResults.needleSize}</td></tr>
+                    <tr><td><strong>Fabric Width</strong></td><td>${currentResults.widthInches} inches / ${currentResults.widthMeters} m</td></tr>
+                    <tr><td><strong>Required Length</strong></td><td>${currentResults.meters} meters</td></tr>
+                    <tr><td><strong>Fabric Area</strong></td><td>${currentResults.areaSqM} m²</td></tr>
+                    <tr><td><strong>Required Yarn</strong></td><td>${currentResults.yarnKg} kg</td></tr>
+                </table>
+                <p style="margin-top:30px"><em>5% wastage included. Generated on ${new Date().toLocaleString()}</em></p>
+                <button onclick="window.print()">Print</button>
+                </body></html>
             `);
-            
             printWindow.document.close();
         }
 
-        // Calculate on page load
-        window.onload = function() {
-            calculate();
-        };
+        window.onload = calculate;
     </script>
 </body>
 </html>
